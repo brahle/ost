@@ -1,10 +1,19 @@
 import subprocess
 
+from django.http import HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
-def pokreni(request):
-	proc = subprocess.Popen('dir', stdout=subprocess.PIPE)
+from ost.settings import EXECUTABLE, TIMEOUT
+
+def main(request, start_speed=1.0):
+	context = {
+		'start_speed': start_speed,
+		'timeout': TIMEOUT*1000,
+	}
+	return render(request, 'index.html', context)	
+
+def run(request, parametar):
+	proc = subprocess.Popen([EXECUTABLE, parametar], stdout=subprocess.PIPE)
 	output = proc.stdout.read()
-	return output
+	return HttpResponse(output)
 
